@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class JdkbugApplication {
+public class JdkBugApplication {
 
     public static void main(String[] args) {
         NukeSSLCerts.nuke();
-        SpringApplication.run(JdkbugApplication.class, args);
+        SpringApplication.run(JdkBugApplication.class, args);
     }
 
 }
