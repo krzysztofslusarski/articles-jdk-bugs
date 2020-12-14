@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:api="http://ks.pl/api"
+            targetNamespace="http://ks.pl/api">
+
+    <xsd:element name="TempRequest" type="api:TempRequest"/>
+    <xsd:element name="TempResponse" type="api:TempResponse"/>
+
+    <xsd:complexType name="TempRequest">
+        <xsd:sequence>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="TempResponse">
+        <xsd:sequence>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
