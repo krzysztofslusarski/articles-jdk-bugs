@@ -20,10 +20,10 @@ import org.apache.http.impl.io.DefaultHttpRequestWriterFactory;
 import org.apache.http.io.HttpMessageParserFactory;
 import org.apache.http.io.HttpMessageWriterFactory;
 
-public class HackerManagedHttpClientConnectionFactory implements HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> {
+public class HackedManagedHttpClientConnectionFactory implements HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> {
     private static final AtomicLong COUNTER = new AtomicLong();
 
-    public static final HackerManagedHttpClientConnectionFactory INSTANCE = new HackerManagedHttpClientConnectionFactory();
+    public static final HackedManagedHttpClientConnectionFactory INSTANCE = new HackedManagedHttpClientConnectionFactory();
 
     private final Log log = LogFactory.getLog(DefaultManagedHttpClientConnection.class);
     private final Log headerLog = LogFactory.getLog("org.apache.http.headers");
@@ -37,7 +37,7 @@ public class HackerManagedHttpClientConnectionFactory implements HttpConnectionF
     /**
      * @since 4.4
      */
-    public HackerManagedHttpClientConnectionFactory(
+    public HackedManagedHttpClientConnectionFactory(
             final HttpMessageWriterFactory<HttpRequest> requestWriterFactory,
             final HttpMessageParserFactory<HttpResponse> responseParserFactory,
             final ContentLengthStrategy incomingContentStrategy,
@@ -53,18 +53,18 @@ public class HackerManagedHttpClientConnectionFactory implements HttpConnectionF
                 StrictContentLengthStrategy.INSTANCE;
     }
 
-    public HackerManagedHttpClientConnectionFactory(
+    public HackedManagedHttpClientConnectionFactory(
             final HttpMessageWriterFactory<HttpRequest> requestWriterFactory,
             final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
         this(requestWriterFactory, responseParserFactory, null, null);
     }
 
-    public HackerManagedHttpClientConnectionFactory(
+    public HackedManagedHttpClientConnectionFactory(
             final HttpMessageParserFactory<HttpResponse> responseParserFactory) {
         this(null, responseParserFactory);
     }
 
-    public HackerManagedHttpClientConnectionFactory() {
+    public HackedManagedHttpClientConnectionFactory() {
         this(null, null);
     }
 
@@ -87,7 +87,7 @@ public class HackerManagedHttpClientConnectionFactory implements HttpConnectionF
             charEncoder.onUnmappableCharacter(unmappableInputAction);
         }
         final String id = "http-outgoing-" + Long.toString(COUNTER.getAndIncrement());
-        return new HackerLoggingManagedHttpClientConnection (
+        return new HackedLoggingManagedHttpClientConnection(
                 id,
                 log,
                 headerLog,

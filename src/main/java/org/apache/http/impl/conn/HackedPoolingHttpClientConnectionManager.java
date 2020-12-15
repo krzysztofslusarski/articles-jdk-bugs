@@ -44,7 +44,7 @@ import org.apache.http.util.Args;
 import org.apache.http.util.Asserts;
 
 @Contract(threading = ThreadingBehavior.SAFE_CONDITIONAL)
-public class HackerPoolingHttpClientConnectionManager
+public class HackedPoolingHttpClientConnectionManager
         implements HttpClientConnectionManager, ConnPoolControl<HttpRoute>, Closeable {
 
     private final Log log = LogFactory.getLog(getClass());
@@ -61,44 +61,44 @@ public class HackerPoolingHttpClientConnectionManager
                 .build();
     }
 
-    public HackerPoolingHttpClientConnectionManager() {
+    public HackedPoolingHttpClientConnectionManager() {
         this(getDefaultRegistry());
     }
 
-    public HackerPoolingHttpClientConnectionManager(final long timeToLive, final TimeUnit timeUnit) {
+    public HackedPoolingHttpClientConnectionManager(final long timeToLive, final TimeUnit timeUnit) {
         this(getDefaultRegistry(), null, null ,null, timeToLive, timeUnit);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry) {
         this(socketFactoryRegistry, null, null);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry,
             final DnsResolver dnsResolver) {
         this(socketFactoryRegistry, null, dnsResolver);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry,
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory) {
         this(socketFactoryRegistry, connFactory, null);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory) {
         this(getDefaultRegistry(), connFactory, null);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry,
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
             final DnsResolver dnsResolver) {
         this(socketFactoryRegistry, connFactory, null, dnsResolver, -1, TimeUnit.MILLISECONDS);
     }
 
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final Registry<ConnectionSocketFactory> socketFactoryRegistry,
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
             final SchemePortResolver schemePortResolver,
@@ -114,7 +114,7 @@ public class HackerPoolingHttpClientConnectionManager
     /**
      * @since 4.4
      */
-    public HackerPoolingHttpClientConnectionManager(
+    public HackedPoolingHttpClientConnectionManager(
             final HttpClientConnectionOperator httpClientConnectionOperator,
             final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory,
             final long timeToLive, final TimeUnit timeUnit) {
@@ -130,7 +130,7 @@ public class HackerPoolingHttpClientConnectionManager
     /**
      * Visible for test.
      */
-    HackerPoolingHttpClientConnectionManager(
+    HackedPoolingHttpClientConnectionManager(
             final CPool pool,
             final Lookup<ConnectionSocketFactory> socketFactoryRegistry,
             final SchemePortResolver schemePortResolver,
@@ -559,7 +559,7 @@ public class HackerPoolingHttpClientConnectionManager
                 final HttpConnectionFactory<HttpRoute, ManagedHttpClientConnection> connFactory) {
             super();
             this.configData = configData != null ? configData : new ConfigData();
-            this.connFactory = HackerManagedHttpClientConnectionFactory.INSTANCE;
+            this.connFactory = HackedManagedHttpClientConnectionFactory.INSTANCE;
         }
 
         @Override
