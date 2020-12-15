@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
+import org.apache.http.client.HttpClient;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,10 +14,12 @@ import org.springframework.util.ClassUtils;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.soap.SoapVersion;
 import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 
 @Slf4j
 @RequiredArgsConstructor
 public class WebServiceProxy<T> implements FactoryBean<T>, InitializingBean {
+    private final HttpClient httpClient;
     private final Class<T> serviceInterface;
     private final Marshaller marshaller;
     private final Unmarshaller unmarshaller;
@@ -41,6 +44,7 @@ public class WebServiceProxy<T> implements FactoryBean<T>, InitializingBean {
         webServiceTemplate.setDefaultUri(defaultUri);
         webServiceTemplate.setMarshaller(marshaller);
         webServiceTemplate.setUnmarshaller(unmarshaller);
+        webServiceTemplate.setMessageSender(new HttpComponentsMessageSender(httpClient));
         webServiceTemplate.afterPropertiesSet();
     }
 
