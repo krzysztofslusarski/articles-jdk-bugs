@@ -10,7 +10,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.impl.conn.HackerPoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +21,7 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 class ClientConfiguration {
     @Bean
     @SneakyThrows
-    HttpClient httpClient(PoolingHttpClientConnectionManager httpClientConnectionManager) {
+    HttpClient httpClient(HackerPoolingHttpClientConnectionManager httpClientConnectionManager) {
         // Do not copy paste that configuration, this is simple config for article purposes.
         RequestConfig requestConfig = RequestConfig.custom()
                 .build();
@@ -35,7 +35,7 @@ class ClientConfiguration {
 
     @Bean
     @SneakyThrows
-    PoolingHttpClientConnectionManager httpClientConnectionManager() {
+    HackerPoolingHttpClientConnectionManager httpClientConnectionManager() {
         SSLContextBuilder builder = new SSLContextBuilder();
         builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
         SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
@@ -46,7 +46,7 @@ class ClientConfiguration {
                 .register("https", sslConnectionSocketFactory)
                 .build();
 
-        PoolingHttpClientConnectionManager connectionPoolManager = new PoolingHttpClientConnectionManager(registry);
+        HackerPoolingHttpClientConnectionManager connectionPoolManager = new HackerPoolingHttpClientConnectionManager(registry);
         connectionPoolManager.setMaxTotal(10);
         connectionPoolManager.setDefaultMaxPerRoute(10);
         return connectionPoolManager;
