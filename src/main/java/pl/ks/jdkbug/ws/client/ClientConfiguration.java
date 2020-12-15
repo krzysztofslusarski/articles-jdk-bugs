@@ -3,9 +3,14 @@ package pl.ks.jdkbug.ws.client;
 import lombok.SneakyThrows;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +21,7 @@ import org.springframework.ws.transport.http.HttpComponentsMessageSender;
 class ClientConfiguration {
     @Bean
     @SneakyThrows
-    HttpClient httpClient() {
+    HttpClient httpClient(PoolingHttpClientConnectionManager httpClientConnectionManager) {
         // Do not copy paste that configuration, this is simple config for article purposes.
         RequestConfig requestConfig = RequestConfig.custom()
                 .build();
@@ -24,9 +29,27 @@ class ClientConfiguration {
         return HttpClients.custom()
                 .addInterceptorFirst(new HttpComponentsMessageSender.RemoveSoapHeadersInterceptor())
                 .setDefaultRequestConfig(requestConfig)
-                .setSSLContext(new SSLContextBuilder().loadTrustMaterial(null, TrustAllStrategy.INSTANCE).build())
-                .setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+                .setConnectionManager(httpClientConnectionManager)
                 .build();
+    }
+
+    @Bean
+    @SneakyThrows
+    PoolingHttpClientConnectionManager httpClientConnectionManager() {
+        SSLContextBuilder builder = new SSLContextBuilder();
+        builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+        SSLConnectionSocketFactory sslConnectionSocketFactory = new SSLConnectionSocketFactory(builder.build(), SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+
+        Registry<ConnectionSocketFactory> registry = RegistryBuilder.
+                <ConnectionSocketFactory> create()
+                .register("http", new PlainConnectionSocketFactory())
+                .register("https", sslConnectionSocketFactory)
+                .build();
+
+        PoolingHttpClientConnectionManager connectionPoolManager = new PoolingHttpClientConnectionManager(registry);
+        connectionPoolManager.setMaxTotal(10);
+        connectionPoolManager.setDefaultMaxPerRoute(10);
+        return connectionPoolManager;
     }
 
     @Bean
